@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { Post, CreatePostData, VoteData, CommentData } from '../types';
 
-const API_URL = 'http://localhost:3001/api';
+// const API_URL = 'http://localhost:3001/api';
+const API_URL = 'https://injoyweb.onrender.com/api';
+
 
 export const fetchPosts = async (): Promise<Post[]> => {
   const response = await axios.get<Post[]>(`${API_URL}/posts`);
