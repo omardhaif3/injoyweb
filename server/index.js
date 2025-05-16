@@ -15,7 +15,7 @@ const getAllowedOrigins = () => {
 
 const io = new Server(httpServer, {
   cors: {
-    origin: getAllowedOrigins(),
+    origin: true,
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -34,7 +34,7 @@ mongoose.connect(MONGO_URI)
 
 // Middleware
 app.use(cors({
-  origin: getAllowedOrigins(),
+  origin: '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
