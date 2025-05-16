@@ -8,14 +8,9 @@ import postsRoutes from './routes/posts.js';
 const app = express();
 const httpServer = createServer(app);
 
-// Get the allowed origins
 const getAllowedOrigins = () => {
-  const origins = ['http://localhost:5173', 'https://localhost:5173'];
-  // Add production origin if needed
-  if (process.env.NODE_ENV === 'production' && process.env.CLIENT_URL) {
-    origins.push(process.env.CLIENT_URL);
-  }
-  return origins;
+  // Allow all origins
+  return '*';
 };
 
 const io = new Server(httpServer, {
