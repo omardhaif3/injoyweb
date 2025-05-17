@@ -33,7 +33,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, [i18n.language]);
 
   return (
-    <div>
+    <div className={i18n.language === 'ar' ? 'font-arabic' : 'font-sans'}>
       <Header />
       <main>{children}</main>
     </div>

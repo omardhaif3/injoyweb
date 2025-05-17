@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+import plugin from 'tailwindcss/plugin';
+import rtl from 'tailwindcss-rtl';
+
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
@@ -85,6 +88,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
+        arabic: ['"Amiri"', 'serif'],
       },
       animation: {
         'bounce-slow': 'bounce 3s ease-in-out infinite',
@@ -92,5 +96,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [rtl],
 };

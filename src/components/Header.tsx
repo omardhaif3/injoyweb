@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { PartyPopper, Plus, Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import clsx from 'clsx';
 
 export default function Header() {
   const location = useLocation();
@@ -18,16 +19,24 @@ export default function Header() {
     } else {
       document.documentElement.dir = 'ltr';
     }
+    setMenuOpen(false); // close menu on language change
   };
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
+  // Determine menu transform classes based on language and menuOpen state
+  const menuTransformClass = () => {
+    if (menuOpen) return 'translate-x-0';
+    if (i18n.language === 'ar') return 'translate-x-full';
+    return '-translate-x-full';
+  };
+
   return (
     <header className="sticky top-0 bg-white shadow-sm z-10">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
           <Link to="/" className="flex items-center gap-2">
             <motion.div
               initial={{ rotate: -10 }}
@@ -54,7 +63,11 @@ export default function Header() {
           </button>
 
           {/* Navigation */}
-          <nav className={`flex-col sm:flex-row sm:flex items-center gap-2 sm:gap-4 absolute sm:static top-16 left-0 w-full sm:w-auto bg-white sm:bg-transparent shadow-md sm:shadow-none transition-transform transform sm:translate-x-0 ${menuOpen ? 'translate-x-0' : '-translate-x-full'} sm:translate-x-0 z-20`}>
+          <nav className={clsx(
+            'flex-col sm:flex-row sm:flex items-center gap-2 sm:gap-4 absolute sm:static top-16 w-full sm:w-auto bg-white sm:bg-transparent shadow-md sm:shadow-none transition-transform transform z-20',
+            menuTransformClass(),
+            i18n.language === 'ar' ? 'left-auto right-0' : 'left-0 right-auto'
+          )}>
             <Link 
               to="/" 
               className={`block px-3 py-2 rounded-lg font-medium transition-colors ${
@@ -87,11 +100,11 @@ export default function Header() {
             </Link>
             <select
               value={lang}
-              onChange={(e) => {
-                changeLanguage(e.target.value);
-                setMenuOpen(false);
-              }}
-              className="ml-4 px-2 py-1 border rounded mt-2 sm:mt-0"
+              onChange={(e) => changeLanguage(e.target.value)}
+              className={clsx(
+                'ml-4 px-2 py-1 border rounded mt-2 sm:mt-0',
+                i18n.language === 'ar' ? 'ml-0 mr-4' : ''
+              )}
               aria-label={t('language')}
             >
               <option value="en">🇺🇸 {t('english')}</option>

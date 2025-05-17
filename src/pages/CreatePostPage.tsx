@@ -5,11 +5,12 @@ import { Plus, Trash2, ArrowLeft } from 'lucide-react';
 import { usePosts } from '../context/PostsContext';
 import { CreatePostData } from '../types';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
 export default function CreatePostPage() {
   const navigate = useNavigate();
   const { createNewPost } = usePosts();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '']);
@@ -100,13 +101,13 @@ export default function CreatePostPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className={clsx('max-w-2xl mx-auto', i18n.language === 'ar' ? 'text-right' : 'text-left')}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="space-y-6"
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
           <button
             onClick={() => navigate(-1)}
             className="text-gray-600 hover:text-gray-900"
@@ -118,7 +119,7 @@ export default function CreatePostPage() {
         </div>
 
         <div className="card p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
             <div>
               <label htmlFor="question" className="label">
                 {t('yourQuestionOrStatement')}
@@ -149,7 +150,7 @@ export default function CreatePostPage() {
             </div>
 
             <div className="space-y-4">
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
                 <label className="label">{t('votingOptions')}</label>
                 {errors.options && (
                   <p className="text-sm text-error-600">{errors.options}</p>
@@ -157,7 +158,7 @@ export default function CreatePostPage() {
               </div>
 
               {options.map((option, index) => (
-                <div key={index} className="flex gap-2">
+                <div key={index} className={clsx('flex gap-2', i18n.language === 'ar' ? 'flex-row-reverse' : 'flex-row')}>
                   <div className="flex-1">
                     <input
                       type="text"
