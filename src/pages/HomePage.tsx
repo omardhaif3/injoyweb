@@ -4,13 +4,15 @@ import { motion } from 'framer-motion';
 import { Plus, RefreshCw } from 'lucide-react';
 import { usePosts } from '../context/PostsContext';
 import PostCard from '../components/PostCard';
+import { useTranslation } from 'react-i18next';
 
 export default function HomePage() {
+  const { t } = useTranslation();
   const { posts, loading, error, refreshPosts } = usePosts();
   
   useEffect(() => {
-    document.title = 'InJoy - Share Questions, Collect Votes';
-  }, []);
+    document.title = t('pageTitleHome');
+  }, [t]);
   
   const container = {
     hidden: { opacity: 0 },
@@ -35,23 +37,23 @@ export default function HomePage() {
         className="text-center space-y-4"
       >
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-          Welcome to <span className="text-primary-600">InJoy</span>
+          {t('welcomeTo')} <span className="text-primary-600">InJoy</span>
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Share fun questions, collect votes, and see what others think - no login required!
+          {t('homePageDescription')}
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
           <Link to="/create" className="btn-primary flex items-center justify-center gap-2">
             <Plus className="h-5 w-5" />
-            Create Your First Post
+            {t('createYourFirstPost')}
           </Link>
           <button 
             onClick={() => refreshPosts()}
             className="btn-outline flex items-center justify-center gap-2"
           >
             <RefreshCw className="h-5 w-5" />
-            Refresh Feed
+            {t('refreshFeed')}
           </button>
         </div>
       </motion.div>
@@ -67,15 +69,15 @@ export default function HomePage() {
             onClick={() => refreshPosts()}
             className="btn-outline mt-4"
           >
-            Try Again
+            {t('tryAgain')}
           </button>
         </div>
       ) : posts.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl shadow-sm">
-          <h2 className="text-2xl font-semibold text-gray-800">No posts yet</h2>
-          <p className="text-gray-600 mt-2">Be the first to create a post!</p>
+          <h2 className="text-2xl font-semibold text-gray-800">{t('noPostsYet')}</h2>
+          <p className="text-gray-600 mt-2">{t('beTheFirstToCreatePost')}</p>
           <Link to="/create" className="btn-primary mt-6 inline-block">
-            Create Post
+            {t('createPost')}
           </Link>
         </div>
       ) : (

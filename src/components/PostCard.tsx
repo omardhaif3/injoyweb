@@ -3,12 +3,14 @@ import { motion } from 'framer-motion';
 import { MessageCircle, Vote } from 'lucide-react';
 import { Post } from '../types';
 import { formatDate } from '../utils/formatters';
+import { useTranslation } from 'react-i18next';
 
 interface PostCardProps {
   post: Post;
 }
 
 export default function PostCard({ post }: PostCardProps) {
+  const { t } = useTranslation();
   const { _id, question, options, totalVotes, comments, createdAt } = post;
   
   // Calculate a gradient based on the post id
@@ -54,7 +56,7 @@ export default function PostCard({ post }: PostCardProps) {
           ))}
           {options.length > 2 && (
             <p className="text-sm text-gray-600 italic">
-              +{options.length - 2} more options
+              {t('moreOptions', { count: options.length - 2 })}
             </p>
           )}
         </div>
@@ -63,11 +65,11 @@ export default function PostCard({ post }: PostCardProps) {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
               <Vote className="h-4 w-4" />
-              <span>{totalVotes} votes</span>
+              <span>{totalVotes} {t('votes')}</span>
             </div>
             <div className="flex items-center gap-1">
               <MessageCircle className="h-4 w-4" />
-              <span>{comments.length} comments</span>
+              <span>{comments.length} {t('comments')}</span>
             </div>
           </div>
           <span>{formatDate(createdAt)}</span>

@@ -4,25 +4,27 @@ import { motion } from 'framer-motion';
 import { Plus, Trash2, ArrowLeft } from 'lucide-react';
 import { usePosts } from '../context/PostsContext';
 import { CreatePostData } from '../types';
+import { useTranslation } from 'react-i18next';
 
 export default function CreatePostPage() {
   const navigate = useNavigate();
   const { createNewPost } = usePosts();
-  
+  const { t } = useTranslation();
+
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '']);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  
+
   useEffect(() => {
-    document.title = 'Create New Post - InJoy';
-  }, []);
-  
+    document.title = t('createNewPost');
+  }, [t]);
+
   const handleOptionChange = (index: number, value: string) => {
     const newOptions = [...options];
     newOptions[index] = value;
     setOptions(newOptions);
-    
+
     // Clear error for this option if it exists
     if (errors[`option${index}`]) {
       const newErrors = { ...errors };
@@ -30,19 +32,19 @@ export default function CreatePostPage() {
       setErrors(newErrors);
     }
   };
-  
+
   const addOption = () => {
     if (options.length < 6) {
       setOptions([...options, '']);
     }
   };
-  
+
   const removeOption = (index: number) => {
     if (options.length > 2) {
       const newOptions = [...options];
       newOptions.splice(index, 1);
       setOptions(newOptions);
-      
+
       // Remove any errors for this option
       if (errors[`option${index}`]) {
         const newErrors = { ...errors };
@@ -51,52 +53,52 @@ export default function CreatePostPage() {
       }
     }
   };
-  
+
   const validateForm = (): boolean => {
     const newErrors: { [key: string]: string } = {};
-    
+
     if (!question.trim()) {
-      newErrors.question = 'Question is required';
+      newErrors.question = t('questionRequired');
     } else if (question.length < 10) {
-      newErrors.question = 'Question must be at least 10 characters';
+      newErrors.question = t('questionMinLength');
     }
-    
+
     options.forEach((option, index) => {
       if (!option.trim()) {
-        newErrors[`option${index}`] = 'Option cannot be empty';
+        newErrors[`option${index}`] = t('optionCannotBeEmpty');
       }
     });
-    
+
     const uniqueOptions = new Set(options.map(opt => opt.trim()));
     if (uniqueOptions.size !== options.length) {
-      newErrors.options = 'All options must be unique';
+      newErrors.options = t('allOptionsUnique');
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm() || isSubmitting) return;
-    
+
     setIsSubmitting(true);
-    
+
     const postData: CreatePostData = {
       question,
       options: options.map(option => option.trim()),
     };
-    
+
     const newPost = await createNewPost(postData);
-    
+
     setIsSubmitting(false);
-    
+
     if (newPost) {
       navigate(`/posts/${newPost._id}`);
     }
   };
-  
+
   return (
     <div className="max-w-2xl mx-auto">
       <motion.div
@@ -105,20 +107,21 @@ export default function CreatePostPage() {
         className="space-y-6"
       >
         <div className="flex items-center gap-2">
-          <button 
-            onClick={() => navigate(-1)} 
+          <button
+            onClick={() => navigate(-1)}
             className="text-gray-600 hover:text-gray-900"
+            aria-label={t('goBack')}
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <h1 className="text-3xl font-bold text-gray-900">Create New Post</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('createNewPost')}</h1>
         </div>
-        
+
         <div className="card p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="question" className="label">
-                Your Question or Statement
+                {t('yourQuestionOrStatement')}
               </label>
               <textarea
                 id="question"
@@ -131,7 +134,7 @@ export default function CreatePostPage() {
                     setErrors(newErrors);
                   }
                 }}
-                placeholder="e.g., What's your favorite programming language?"
+                placeholder={t('questionPlaceholder')}
                 className={`textarea min-h-24 ${
                   errors.question ? 'border-error-500 focus:ring-error-500 focus:border-error-500' : ''
                 }`}
@@ -141,18 +144,18 @@ export default function CreatePostPage() {
                 <p className="mt-1 text-sm text-error-600">{errors.question}</p>
               )}
               <p className="mt-1 text-sm text-gray-500">
-                {question.length}/300 characters
+                {question.length}/300 {t('characters')}
               </p>
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <label className="label">Voting Options</label>
+                <label className="label">{t('votingOptions')}</label>
                 {errors.options && (
                   <p className="text-sm text-error-600">{errors.options}</p>
                 )}
               </div>
-              
+
               {options.map((option, index) => (
                 <div key={index} className="flex gap-2">
                   <div className="flex-1">
@@ -160,7 +163,7 @@ export default function CreatePostPage() {
                       type="text"
                       value={option}
                       onChange={(e) => handleOptionChange(index, e.target.value)}
-                      placeholder={`Option ${index + 1}`}
+                      placeholder={`${t('option')} ${index + 1}`}
                       className={`input ${
                         errors[`option${index}`]
                           ? 'border-error-500 focus:ring-error-500 focus:border-error-500'
@@ -174,19 +177,20 @@ export default function CreatePostPage() {
                       </p>
                     )}
                   </div>
-                  
+
                   {options.length > 2 && (
                     <button
                       type="button"
                       onClick={() => removeOption(index)}
                       className="p-2 text-gray-400 hover:text-error-500 transition-colors"
+                      aria-label={t('removeOption')}
                     >
                       <Trash2 className="h-5 w-5" />
                     </button>
                   )}
                 </div>
               ))}
-              
+
               {options.length < 6 && (
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -196,11 +200,11 @@ export default function CreatePostPage() {
                   className="btn-outline flex items-center gap-2 w-full"
                 >
                   <Plus className="h-4 w-4" />
-                  Add Option
+                  {t('addOption')}
                 </motion.button>
               )}
             </div>
-            
+
             <div className="pt-4">
               <motion.button
                 whileHover={{ scale: 1.02 }}
@@ -211,7 +215,7 @@ export default function CreatePostPage() {
                   isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
                 }`}
               >
-                {isSubmitting ? 'Creating Post...' : 'Create Post'}
+                {isSubmitting ? t('creatingPost') : t('createPost')}
               </motion.button>
             </div>
           </form>

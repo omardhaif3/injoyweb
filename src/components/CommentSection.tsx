@@ -4,12 +4,14 @@ import { Send } from 'lucide-react';
 import { Post, CommentData } from '../types';
 import { usePosts } from '../context/PostsContext';
 import { formatDate } from '../utils/formatters';
+import { useTranslation } from 'react-i18next';
 
 interface CommentSectionProps {
   post: Post;
 }
 
 export default function CommentSection({ post }: CommentSectionProps) {
+  const { t } = useTranslation();
   const [commentText, setCommentText] = useState('');
   const [userName, setUserName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,7 +27,7 @@ export default function CommentSection({ post }: CommentSectionProps) {
     const commentData: CommentData = {
       postId: post._id,
       text: commentText,
-      userName: userName.trim() || 'Anonymous',
+      userName: userName.trim() || t('anonymous'),
     };
     
     const success = await comment(commentData);
@@ -39,29 +41,29 @@ export default function CommentSection({ post }: CommentSectionProps) {
   
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-semibold">Comments</h3>
+      <h3 className="text-xl font-semibold">{t('comments')}</h3>
       
       <form onSubmit={handleSubmit} className="space-y-3">
         <div>
-          <label htmlFor="userName" className="label">Your name (optional)</label>
+          <label htmlFor="userName" className="label">{t('yourNameOptional')}</label>
           <input
             type="text"
             id="userName"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
-            placeholder="Anonymous"
+            placeholder={t('anonymous')}
             className="input"
             maxLength={30}
           />
         </div>
         
         <div>
-          <label htmlFor="commentText" className="label">Your comment</label>
+          <label htmlFor="commentText" className="label">{t('yourComment')}</label>
           <textarea
             id="commentText"
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
-            placeholder="Share your thoughts..."
+            placeholder={t('shareYourThoughts')}
             className="textarea min-h-24"
             maxLength={500}
             required
@@ -79,7 +81,7 @@ export default function CommentSection({ post }: CommentSectionProps) {
             }`}
           >
             <Send className="h-4 w-4" />
-            {isSubmitting ? 'Posting...' : 'Post Comment'}
+            {isSubmitting ? t('posting') : t('postComment')}
           </motion.button>
         </div>
       </form>
@@ -87,7 +89,7 @@ export default function CommentSection({ post }: CommentSectionProps) {
       <div className="space-y-4">
         {post.comments.length === 0 ? (
           <p className="text-center py-8 text-gray-500 italic">
-            No comments yet. Be the first to share your thoughts!
+            {t('noCommentsYet')}
           </p>
         ) : (
           post.comments.map((comment) => (
@@ -99,7 +101,7 @@ export default function CommentSection({ post }: CommentSectionProps) {
             >
               <div className="flex justify-between items-start">
                 <h4 className="font-medium text-gray-900">
-                  {comment.userName || 'Anonymous'}
+                  {comment.userName || t('anonymous')}
                 </h4>
                 <span className="text-xs text-gray-500">
                   {formatDate(comment.createdAt)}

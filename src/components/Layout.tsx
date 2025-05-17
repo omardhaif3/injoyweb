@@ -1,25 +1,43 @@
-import { ReactNode } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect } from 'react';
 import Header from './Header';
-import Footer from './Footer';
+import { useTranslation } from 'react-i18next';
 
-interface LayoutProps {
-  children: ReactNode;
-}
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { i18n } = useTranslation();
 
-export default function Layout({ children }: LayoutProps) {
+  useEffect(() => {
+    // Detect browser language on first visit
+    const browserLang = navigator.language.split('-')[0];
+    const supportedLanguages = ['en', 'ar'];
+    const defaultLang = supportedLanguages.includes(browserLang) ? browserLang : 'en';
+
+    if (!i18n.language || i18n.language === 'en') {
+      i18n.changeLanguage(defaultLang);
+    }
+
+    // Set document direction based on language
+    if (defaultLang === 'ar') {
+      document.documentElement.dir = 'rtl';
+    } else {
+      document.documentElement.dir = 'ltr';
+    }
+  }, [i18n]);
+
+  useEffect(() => {
+    // Update direction on language change
+    if (i18n.language === 'ar') {
+      document.documentElement.dir = 'rtl';
+    } else {
+      document.documentElement.dir = 'ltr';
+    }
+  }, [i18n.language]);
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <div>
       <Header />
-      <motion.main 
-        className="flex-grow container mx-auto px-4 sm:px-6 md:px-8 py-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {children}
-      </motion.main>
-      <Footer />
+      <main>{children}</main>
     </div>
   );
-}
+};
+
+export default Layout;
