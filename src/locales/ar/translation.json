@@ -28,5 +28,7 @@
   "createNewPost": "إنشاء منشور جديد",
   "yourQuestionOrStatement": "سؤالك أو بيانك",
   "votingOptions": "خيارات التصويت",
-  "characters": "حروف"
+  "characters": "حروف",
+  "popularPosts": "المنشورات الشائعة",
+  "mostVotedPostIs":"المنشور الاكثر تصويت "
 }

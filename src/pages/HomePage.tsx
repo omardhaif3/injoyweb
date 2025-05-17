@@ -1,19 +1,30 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Plus, RefreshCw } from 'lucide-react';
 import { usePosts } from '../context/PostsContext';
 import PostCard from '../components/PostCard';
+import FeaturedPostCard from '../components/FeaturedPostCard';
 import { useTranslation } from 'react-i18next';
+import { Post } from '../types';
 
 export default function HomePage() {
   const { t } = useTranslation();
   const { posts, loading, error, refreshPosts } = usePosts();
-  
+  const [showFeatured, setShowFeatured] = useState(true);
+  const [topPost, setTopPost] = useState<Post | null>(null);
+
   useEffect(() => {
     document.title = t('pageTitleHome');
   }, [t]);
-  
+
+  useEffect(() => {
+    if (posts && posts.length > 0) {
+      const sorted = [...posts].sort((a, b) => b.totalVotes - a.totalVotes);
+      setTopPost(sorted[0]);
+    }
+  }, [posts]);
+
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -23,14 +34,17 @@ export default function HomePage() {
       },
     },
   };
-  
+
   const item = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 },
   };
-  
+
   return (
     <div className="space-y-8 px-4 sm:px-6 md:px-8">
+      {showFeatured && topPost && (
+        <FeaturedPostCard post={topPost} onClose={() => setShowFeatured(false)} />
+      )}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -42,7 +56,7 @@ export default function HomePage() {
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
           {t('homePageDescription')}
         </p>
-        
+
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
           <Link to="/create" className="btn-primary flex items-center justify-center gap-2">
             <Plus className="h-5 w-5" />
@@ -57,7 +71,7 @@ export default function HomePage() {
           </button>
         </div>
       </motion.div>
-      
+
       {loading && posts.length === 0 ? (
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>

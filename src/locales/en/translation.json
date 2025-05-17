@@ -28,5 +28,7 @@
   "createNewPost": "Create New Post",
   "yourQuestionOrStatement": "Your Question or Statement",
   "votingOptions": "Voting Options",
-  "characters": "characters"
+  "characters": "characters",
+  "mostVotedPostIs":"Most Voted Post"
+
 }
