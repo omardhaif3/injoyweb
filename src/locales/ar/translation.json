@@ -30,5 +30,10 @@
   "votingOptions": "خيارات التصويت",
   "characters": "حروف",
   "popularPosts": "المنشورات الشائعة",
-  "mostVotedPostIs":"المنشور الاكثر تصويت "
+  "mostVotedPostIs":"المنشور الاكثر تصويت ",
+  "questionPlaceholder":"اكتب سؤالك لمشاركتة مع اصدقاءك",
+  "option":"خيار",
+  "addOption":"اضاقة خيار",
+  "removeOption":"حذف"
+
 }

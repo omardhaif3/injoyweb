@@ -29,6 +29,10 @@
   "yourQuestionOrStatement": "Your Question or Statement",
   "votingOptions": "Voting Options",
   "characters": "characters",
-  "mostVotedPostIs":"Most Voted Post"
+  "mostVotedPostIs":"Most Voted Post",
+  "questionPlaceholder":"ًWrite Your Question",
+  "option":"option",
+"addOption":"Add Option",
+  "removeOption":"remove Option"
 
 }
